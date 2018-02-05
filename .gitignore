@@ -8,3 +8,4 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 static/qr-code.png
+upload/**
