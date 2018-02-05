@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <title>文件管理</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+    }
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      width: 80px;
+      height: 80px;
+      line-height: 100px;
+      text-align: center;
+      border-radius: 10px;
+    }
+    .loading {
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      vertical-align: middle;
+      -webkit-animation: loading 1s steps(12, end) infinite;
+      animation: loading 1s steps(12, end) infinite;
+      background: transparent url('loading.svg') no-repeat;
+      background-size: 100%;
+    }
+    @-webkit-keyframes loading {
+      0% {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+      }
+      100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+      }
+    }
+    @keyframes loading {
+      0% {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+      }
+      100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+      }
+    }
+    a {
+      color: #1e50a2;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin: 5px;">
+    <input type="file" name="myfile" multiple="multiple" id="files">
+    <button type="button" onclick="upload()">上傳</button>
+    <br>
+    <input type="text" name="filename" id="filename" onkeyup="changeHref(this.value)">
+    <a href="${domain}/attachement/downloadFile?filename=" id="href">下載</a>
+  </div>
+  <div class="modal" id="loading" style="display: none">
+    <div class="content">
+      <i class="loading"></i>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="vendor/axios/axios.min.js"></script>
+  <script>
+      function upload () {
+          var formdata = new FormData(),
+              files = document.getElementById('files').files;
+          for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+              formdata.append('myfile', file);
+          }
+          document.getElementById('loading').style.display = 'block';
+          axios({
+              url: '${domain}/attachement/upload',
+              method: 'post',
+              data: formdata,
+              headers: {'Content-Type': 'multipart/form-data'}
+          }).then(function (res) {
+              if (res.data.resultCode === '000000') {
+                  alert('上傳' + res.data.data.len + '個文件成功');
+                  document.getElementById('loading').style.display = 'none';
+              } else {
+                  alert('好像出錯了');
+                  document.getElementById('loading').style.display = 'none';
+              }
+          }).catch(function (e) {
+              alert('好像出錯了');
+              document.getElementById('loading').style.display = 'none';
+          });
+      }
+      function changeHref (val) {
+          document.getElementById('href').href = '${domain}/attachement/downloadFile?filename=' + val;
+      }
+  </script>
+</body>
+</html>
