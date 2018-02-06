@@ -52,7 +52,7 @@ app.use(log4js.connectLogger(connectLogger, {
     }
 }));
 
-app.use(timeout('1200s'));
+app.use(timeout(config.timeOut));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.all('*', (req, res, next) => {
@@ -106,7 +106,7 @@ server = app.listen(config.port, () => {
         });
     }
     addr = 'http://' + iptable['en0:1'] + ':' + port;
-    app.get('/', function (req, res) {
+    app.get('/', (req, res) => {
         res.send(data.toString().replace(/\${domain}/g, addr));
     });
     code = qr.image(addr, { type: 'png' });

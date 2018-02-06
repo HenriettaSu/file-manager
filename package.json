@@ -1,6 +1,6 @@
 {
   "name": "file-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "基於node.js的設備間文件傳輸",
   "author": "Henrie's Mac <dyociuzenuane@hotmail.com>",
   "scripts": {
